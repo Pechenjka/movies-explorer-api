@@ -1,0 +1,20 @@
+{
+  "name": "movies-explorer-api",
+  "version": "1.0.0",
+  "description": "diploma, backend",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PetyaLobachev/movies-explorer-api.git"
+  },
+  "author": "Petr Lobachev <petya.lobachev@yandex.ru>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PetyaLobachev/movies-explorer-api/issues"
+  },
+  "homepage": "https://github.com/PetyaLobachev/movies-explorer-api#readme"
+}
