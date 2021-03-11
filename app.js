@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const { PORT, MONGO_URL } = require('./config/index');
 
@@ -12,5 +13,16 @@ mongoose.connect(MONGO_URL, {
   useUnifiedTopology: true,
 });
 mongoose.connection.on('open', () => console.log('Mongoose connection...'));
+
+app.use(cors());
+
+
+
+
+
+
+
+
+
 
 app.listen(PORT, () => console.log(`Aplication is working on the port ${PORT}`));
