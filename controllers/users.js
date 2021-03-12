@@ -3,8 +3,16 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET, JWT_TTL } = require('../config');
 
-const getCurrentUser = () => {
-
+const getCurrentUser = (req, res, next) => {
+  const { email, name } = req.body;
+  User.findOne({ email, name })
+    .then((user) => {
+      if (!user) {
+        return console.log('Пользователь не найден');
+      }
+      return res.send(user);
+    })
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
