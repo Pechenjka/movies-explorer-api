@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET, JWT_TTL } = require('../config');
+const { eventNames } = require('../models/user');
 
 const getCurrentUser = (req, res, next) => {
   const { email, name } = req.body;
@@ -45,8 +46,22 @@ const login = (req, res, next) => {
     })
     .catch(next);
 };
-const updateUser = () => {
-
+const updateUser = (req, res, next) => {
+  const { _id } = req.params;
+  const { email, name } = req.body;
+  User.findByIdAndUpdate(_id,
+    { email, name },
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+    })
+    .then((data) => res.status(200).send(data))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        console.log('Не правильно заполнено одно из полей');
+      }
+    })
+    .catch(next);
 };
 module.exports = {
   getCurrentUser, createUser, updateUser, login,
