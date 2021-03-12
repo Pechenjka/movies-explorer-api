@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
-const { PORT, MONGO_URL } = require('./config/index');
+const { PORT, MONGO_URL } = require('./config');
 const router = require('./routes/index');
 
 const app = express();
@@ -16,6 +16,7 @@ mongoose.connect(MONGO_URL, {
 mongoose.connection.on('open', () => console.log('Mongoose connection...'));
 
 app.use(cors());
+app.use(express.json({ extended: true }));
 
 app.use('/', router);
 
