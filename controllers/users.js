@@ -2,7 +2,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET, JWT_TTL } = require('../config');
-const { eventNames } = require('../models/user');
 
 const getCurrentUser = (req, res, next) => {
   const { email, name } = req.body;
@@ -47,7 +46,7 @@ const login = (req, res, next) => {
     .catch(next);
 };
 const updateUser = (req, res, next) => {
-  const { _id } = req.params;
+  const { _id } = req.user;
   const { email, name } = req.body;
   User.findByIdAndUpdate(_id,
     { email, name },
