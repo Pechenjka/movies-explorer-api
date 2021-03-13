@@ -5,6 +5,7 @@ const cors = require('cors');
 const { PORT, MONGO_URL } = require('./config');
 const router = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use(express.json({ extended: true }));
 app.use(requestLogger);
 app.use('/', router);
 app.use(errorLogger);
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Aplication is working on the port ${PORT}`));

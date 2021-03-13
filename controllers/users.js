@@ -2,13 +2,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const { JWT_SECRET, JWT_TTL } = require('../config');
+const {
+  Unauthorized, NotFound, BadReguest, Conflict,
+} = require('../error');
 
 const getCurrentUser = (req, res, next) => {
   const { email, name } = req.body;
   User.findOne({ email, name })
     .then((user) => {
       if (!user) {
-        return console.log('Пользователь не найден');
+        throw new NotFound(`Пользователь с таким email: ${email} или name: ${name} не найден`);
       }
       return res.send(user);
     })
@@ -25,8 +28,9 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        console.log('одно из полей не правильно заполнено заглушка');
+        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
       }
+      throw new Conflict(`Пользователь с таким email: ${email} уже существует`);
     })
     .catch(next);
 };
@@ -40,8 +44,11 @@ const login = (req, res, next) => {
         { expiresIn: JWT_TTL });
       res.status(200).send({ token });
     })
-    .catch(() => {
-      console.log('необходима аторизация');
+    .catch((err) => {
+      if (err.name === 'Error') {
+        throw new BadReguest(`Не правильно заполнено поле email: ${email} или password: ${password}`);
+      }
+      throw new Unauthorized('Необходимо пройти авторизацию');
     })
     .catch(next);
 };
@@ -57,7 +64,7 @@ const updateUser = (req, res, next) => {
     .then((data) => res.status(200).send(data))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        console.log('Не правильно заполнено одно из полей');
+        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
       }
     })
     .catch(next);

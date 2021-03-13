@@ -1,4 +1,7 @@
 const Movie = require('../models/movie');
+const {
+  NotFound, BadReguest, ForBidden,
+} = require('../error');
 
 const getSavedMovies = (req, res, next) => {
   Movie.find({})
@@ -31,23 +34,29 @@ const createMovie = (req, res, next) => {
     nameRU,
     nameEN,
     // owner: req.user._id,
+    // movieId: 22,
   })
     .then((movie) => {
-      Movie.findById(movie._id)
+      Movie.findOne(movie)
         .then((data) => res.status(200).send(data))
         .catch(() => {
-          console.log('Фильм не найден. Заглушка');
+          throw new NotFound('Фильм не найлден');
         });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new BadReguest('Одно из полей заполнено не правильно');
+      }
     })
     .catch(next);
 };
 
 const deleteSavedMovie = (req, res, next) => {
   Movie.findByIdAndRemove(req.params._id)
-    .orFail(console.log('ошибка'))
+    .orFail(new NotFound('Фильм не найлден'))
     .then((data) => res.send(data))
     .catch(() => {
-      console.log('ошибка фильм не удалился. Заглушка');
+      throw new ForBidden('Нет прав на удаление чужого фильма');
     })
     .catch(next);
 };
