@@ -33,11 +33,12 @@ const createMovie = (req, res, next) => {
     thumbnail,
     nameRU,
     nameEN,
-    // owner: req.user._id,
-    // movieId: 22,
+    owner: req.user._id,
+    movieId: 22,
   })
     .then((movie) => {
-      Movie.findOne(movie)
+      console.log(movie._id);
+      Movie.findById(movie._id)
         .then((data) => res.status(200).send(data))
         .catch(() => {
           throw new NotFound('Фильм не найлден');
