@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cors = require('cors');
 const limiter = require('./middlewares/rateLimit');
 
@@ -18,6 +19,7 @@ mongoose.connect(MONGO_URL, {
 });
 mongoose.connection.on('open', () => console.log('Mongoose connection...'));
 app.use(limiter);
+app.use(helmet());
 app.use(cors());
 app.use(express.json({ extended: true }));
 
