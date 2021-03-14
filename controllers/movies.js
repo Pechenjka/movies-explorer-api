@@ -24,12 +24,17 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteSavedMovie = (req, res, next) => {
-  Movie.findByIdAndRemove(req.params.movieId)
-    .orFail(new NotFound(`Not found: ${req.params.movieId}`))
-    .then((data) => res.send(data))
-    .catch((err) => {
-      if (err.name === 'CastError') {
+  Movie.findById(req.params.movieId)
+    .then((movie) => {
+      if (!movie) {
+        throw new NotFound(`Not found: ${req.params.movieId}`);
+      }
+      if (movie.owner.toString() !== req.user._id) {
         throw new ForBidden('Нет прав на удаление чужого фильма');
+      } else {
+        Movie.findByIdAndRemove(req.params.movieId)
+          .then((data) => res.status(200).send(data))
+          .catch(next);
       }
     })
     .catch(next);
