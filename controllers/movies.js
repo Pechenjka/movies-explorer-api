@@ -10,38 +10,10 @@ const getSavedMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    thumbnail,
-    nameRU,
-    nameEN,
-  } = req.body;
-  Movie.create({
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailer,
-    thumbnail,
-    nameRU,
-    nameEN,
-    owner: req.user._id,
-    movieId: 22,
-  })
+  const owner = req.user._id;
+  Movie.create({ owner, ...req.body })
     .then((movie) => {
-      Movie.findById(movie._id)
-        .then((data) => res.status(200).send(data))
-        .catch(() => {
-          throw new NotFound('Фильм не найлден');
-        });
+      res.status(200).send(movie);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -52,12 +24,13 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteSavedMovie = (req, res, next) => {
-  const { _id } = req.params;
-  Movie.findByIdAndRemove(_id)
-    .orFail(new NotFound(`Фильм не найлден по этому id: ${_id}`))
+  Movie.findByIdAndRemove(req.params.movieId)
+    .orFail(new NotFound(`Not found: ${req.params.movieId}`))
     .then((data) => res.send(data))
-    .catch(() => {
-      throw new ForBidden('Нет прав на удаление чужого фильма');
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new ForBidden('Нет прав на удаление чужого фильма');
+      }
     })
     .catch(next);
 };
