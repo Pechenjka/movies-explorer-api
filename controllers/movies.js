@@ -37,7 +37,6 @@ const createMovie = (req, res, next) => {
     movieId: 22,
   })
     .then((movie) => {
-      console.log(movie._id);
       Movie.findById(movie._id)
         .then((data) => res.status(200).send(data))
         .catch(() => {
@@ -53,8 +52,9 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteSavedMovie = (req, res, next) => {
-  Movie.findByIdAndRemove(req.params._id)
-    .orFail(new NotFound('Фильм не найлден'))
+  const { _id } = req.params;
+  Movie.findByIdAndRemove(_id)
+    .orFail(new NotFound(`Фильм не найлден по этому id: ${_id}`))
     .then((data) => res.send(data))
     .catch(() => {
       throw new ForBidden('Нет прав на удаление чужого фильма');
