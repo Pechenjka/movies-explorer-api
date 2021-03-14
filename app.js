@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const limiter = require('./middlewares/rateLimit');
 
 const { PORT, MONGO_URL } = require('./config');
 const router = require('./routes/index');
@@ -16,7 +17,7 @@ mongoose.connect(MONGO_URL, {
   useUnifiedTopology: true,
 });
 mongoose.connection.on('open', () => console.log('Mongoose connection...'));
-
+app.use(limiter);
 app.use(cors());
 app.use(express.json({ extended: true }));
 
