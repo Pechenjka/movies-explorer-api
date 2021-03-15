@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const cors = require('cors');
+const { errors } = require('celebrate');
 const limiter = require('./middlewares/rateLimit');
 
 const { PORT, MONGO_URL } = require('./config');
@@ -26,6 +27,7 @@ app.use(express.json({ extended: true }));
 app.use(requestLogger);
 app.use('/', router);
 app.use(errorLogger);
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Aplication is working on the port ${PORT}`));
