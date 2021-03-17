@@ -18,7 +18,6 @@ mongoose.connect(MONGO_URL, {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-mongoose.connection.on('open', () => console.log('Mongoose connection...'));
 app.use(limiter);
 app.use(helmet());
 app.use(cors());
@@ -30,4 +29,4 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Aplication is working on the port ${PORT}`));
+app.listen(PORT);
