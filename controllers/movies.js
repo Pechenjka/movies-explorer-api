@@ -2,6 +2,7 @@ const Movie = require('../models/movie');
 const {
   NotFound, BadReguest, ForBidden,
 } = require('../error');
+const { BAD_REQUEST_MESSAGE, NOT_FOUND_MESSAGE, FOR_BIDDEN_MESSAGE } = require('../utils/constants');
 
 const getSavedMovies = (req, res, next) => {
   const owner = req.user._id;
@@ -20,7 +21,7 @@ const createMovie = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadReguest('Одно из полей заполнено не правильно');
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
       }
       next(err);
     })
@@ -31,10 +32,10 @@ const deleteSavedMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
-        throw new NotFound(`Not found: ${req.params.movieId}`);
+        throw new NotFound(NOT_FOUND_MESSAGE.MOVIE_ERROR);
       }
       if (movie.owner.toString() !== req.user._id) {
-        throw new ForBidden('Нет прав на удаление чужого фильма');
+        throw new ForBidden(FOR_BIDDEN_MESSAGE);
       } else {
         Movie.findByIdAndRemove(req.params.movieId)
           .then((data) => res.status(200).send(data))

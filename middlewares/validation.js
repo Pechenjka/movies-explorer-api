@@ -1,5 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
+const { CELEBRATE_VALIDATE_URL_HELPER_MESSAGE } = require('../utils/constants');
 
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
@@ -37,19 +38,19 @@ const validationCreateMovie = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
     trailer: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
     thumbnail: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
   }),
 });

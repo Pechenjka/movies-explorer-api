@@ -7,13 +7,15 @@ const {
 const {
   Unauthorized, NotFound, BadReguest, Conflict,
 } = require('../error');
+const {
+  UNAUTHORIZATED_MESSAGE, BAD_REQUEST_MESSAGE, CONFLICT_MESSAGE, NOT_FOUND_MESSAGE,
+} = require('../utils/constants');
 
 const getCurrentUser = (req, res, next) => {
-  const { email, name } = req.body;
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFound(`Пользователь с таким email: ${email} или name: ${name} не найден`);
+        throw new NotFound(NOT_FOUND_MESSAGE.INVALID_CURRENT_USER);
       }
       return res.send(user);
     })
@@ -30,10 +32,10 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
       }
       if (err.name === 'MongoError') {
-        throw new Conflict(`Пользователь с таким email: ${email} уже существует`);
+        throw new Conflict(CONFLICT_MESSAGE);
       }
       next(err);
     })
@@ -52,10 +54,10 @@ const login = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или password: ${password}`);
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
       }
       if (err.status === 401) {
-        throw new Unauthorized('Необходимо пройти авторизацию');
+        throw new Unauthorized(UNAUTHORIZATED_MESSAGE.INVALID_REGISTER);
       }
       next(err);
     })
