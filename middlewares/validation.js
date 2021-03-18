@@ -1,12 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 
-const validationCurrentUser = celebrate({
-  body: Joi.object().keys({
-    id: Joi.string().hex().length(24),
-  }),
-});
-
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -18,14 +12,14 @@ const validationRegisterUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     name: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
 const validationAuthorizationUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
@@ -68,7 +62,6 @@ const validationDeletedSavedMovie = celebrate({
 
 module.exports = {
   validationUpdateUser,
-  validationCurrentUser,
   validationRegisterUser,
   validationAuthorizationUser,
   validationCreateMovie,
