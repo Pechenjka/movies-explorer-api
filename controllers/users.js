@@ -73,6 +73,12 @@ const updateUser = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
     })
     .then((data) => res.status(200).send(data))
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
+      }
+      next(err);
+    })
     .catch(next);
 };
 module.exports = {
