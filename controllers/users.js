@@ -10,7 +10,7 @@ const {
 
 const getCurrentUser = (req, res, next) => {
   const { email, name } = req.body;
-  User.findOne({ email, name })
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
         throw new NotFound(`Пользователь с таким email: ${email} или name: ${name} не найден`);
