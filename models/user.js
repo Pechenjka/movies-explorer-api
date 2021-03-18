@@ -2,27 +2,28 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const { Unauthorized } = require('../error');
+const { UNAUTHORIZATED_MESSAGE, USER_SCHEMA_VALIDATION_MESSAGE } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Поле 'name' должно быть заполнено"],
-    minlength: [2, "Минимальная длина поля  'name' - 2"],
-    maxlength: [30, "Максимальная длина поля  'name' - 30"],
+    required: [true, USER_SCHEMA_VALIDATION_MESSAGE.NAME],
+    minlength: [2, USER_SCHEMA_VALIDATION_MESSAGE.MIN_LENGTH],
+    maxlength: [30, USER_SCHEMA_VALIDATION_MESSAGE.MAX_LENGTH],
 
   },
   email: {
     type: String,
-    required: [true, "Поле 'email' должно быть заполнено"],
+    required: [true, USER_SCHEMA_VALIDATION_MESSAGE.EMAIL],
     unique: true,
     validate: {
       validator: (v) => validator.isEmail(v),
-      message: "Поле 'email' должно быть валидным url-адресом",
+      message: USER_SCHEMA_VALIDATION_MESSAGE.EMAIL_URL,
     },
   },
   password: {
     type: String,
-    required: [true, "Поле 'password' должно быть заполнено"],
+    required: [true, USER_SCHEMA_VALIDATION_MESSAGE.PASSWORD],
     select: false,
   },
 });
@@ -31,12 +32,12 @@ userSchema.statics.findUserByCredentials = function findUser(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new Unauthorized('Неправильные почта или пароль');
+        throw new Unauthorized(UNAUTHORIZATED_MESSAGE.INVALID_AUTHORIZED);
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new Unauthorized('Неправильные почта или пароль');
+            throw new Unauthorized(UNAUTHORIZATED_MESSAGE.INVALID_AUTHORIZED);
           }
           return user;
         });

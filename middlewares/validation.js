@@ -1,11 +1,6 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
-
-const validationCurrentUser = celebrate({
-  body: Joi.object().keys({
-    id: Joi.string().hex().length(24),
-  }),
-});
+const { CELEBRATE_VALIDATE_URL_HELPER_MESSAGE } = require('../utils/constants');
 
 const validationUpdateUser = celebrate({
   body: Joi.object().keys({
@@ -18,14 +13,14 @@ const validationRegisterUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     name: Joi.string().required().min(2).max(30),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
 const validationAuthorizationUser = celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 });
 
@@ -33,6 +28,7 @@ const validationCreateMovie = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
+    description: Joi.string().required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
     movieId: Joi.number().required(),
@@ -42,19 +38,19 @@ const validationCreateMovie = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
     trailer: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
     thumbnail: Joi.string().required().custom((value, helper) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helper.message('Не правильный адрес');
+      return helper.message(CELEBRATE_VALIDATE_URL_HELPER_MESSAGE);
     }),
   }),
 });
@@ -67,7 +63,6 @@ const validationDeletedSavedMovie = celebrate({
 
 module.exports = {
   validationUpdateUser,
-  validationCurrentUser,
   validationRegisterUser,
   validationAuthorizationUser,
   validationCreateMovie,

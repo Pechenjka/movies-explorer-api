@@ -1,17 +1,21 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const { JWT_SECRET, JWT_TTL, NODE_ENV } = require('../config');
+const {
+  JWT_SECRET, JWT_TTL, NODE_ENV, DEV_JWT_SECRET,
+} = require('../config');
 const {
   Unauthorized, NotFound, BadReguest, Conflict,
 } = require('../error');
+const {
+  UNAUTHORIZATED_MESSAGE, BAD_REQUEST_MESSAGE, CONFLICT_MESSAGE, NOT_FOUND_MESSAGE,
+} = require('../utils/constants');
 
 const getCurrentUser = (req, res, next) => {
-  const { email, name } = req.body;
-  User.findOne({ email, name })
+  User.findById(req.user._id)
     .then((user) => {
       if (!user) {
-        throw new NotFound(`Пользователь с таким email: ${email} или name: ${name} не найден`);
+        throw new NotFound(NOT_FOUND_MESSAGE.INVALID_CURRENT_USER);
       }
       return res.send(user);
     })
@@ -28,27 +32,34 @@ const createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
       }
-      throw new Conflict(`Пользователь с таким email: ${email} уже существует`);
+      if (err.name === 'MongoError') {
+        throw new Conflict(CONFLICT_MESSAGE);
+      }
+      next(err);
     })
     .catch(next);
 };
+
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        NODE_ENV === 'production' ? JWT_SECRET : DEV_JWT_SECRET,
         { expiresIn: JWT_TTL });
       res.status(200).send({ token });
     })
     .catch((err) => {
-      if (err.name === 'Error') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или password: ${password}`);
+      if (err.name === 'ValidationError') {
+        throw new BadReguest(BAD_REQUEST_MESSAGE);
       }
-      throw new Unauthorized('Необходимо пройти авторизацию');
+      if (err.status === 401) {
+        throw new Unauthorized(UNAUTHORIZATED_MESSAGE.INVALID_REGISTER);
+      }
+      next(err);
     })
     .catch(next);
 };
@@ -62,11 +73,6 @@ const updateUser = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
     })
     .then((data) => res.status(200).send(data))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
-      }
-    })
     .catch(next);
 };
 module.exports = {

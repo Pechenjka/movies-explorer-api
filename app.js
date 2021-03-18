@@ -18,12 +18,13 @@ mongoose.connect(MONGO_URL, {
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
-app.use(limiter);
+
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ extended: true }));
 
 app.use(requestLogger);
+app.use(limiter);
 app.use('/', router);
 app.use(errorLogger);
 app.use(errors());
