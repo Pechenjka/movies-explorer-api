@@ -32,10 +32,14 @@ const createUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
       }
-      throw new Conflict(`Пользователь с таким email: ${email} уже существует`);
+      if (err.name === 'MongoError') {
+        throw new Conflict(`Пользователь с таким email: ${email} уже существует`);
+      }
+      next(err);
     })
     .catch(next);
 };
+
 const login = (req, res, next) => {
   const { email, password } = req.body;
 
