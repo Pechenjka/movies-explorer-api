@@ -64,11 +64,6 @@ const updateUser = (req, res, next) => {
       runValidators: true, // данные будут валидированы перед изменением
     })
     .then((data) => res.status(200).send(data))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        throw new BadReguest(`Не правильно заполнено поле email: ${email} или name: ${name}`);
-      }
-    })
     .catch(next);
 };
 module.exports = {
