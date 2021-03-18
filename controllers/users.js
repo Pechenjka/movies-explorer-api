@@ -51,10 +51,13 @@ const login = (req, res, next) => {
       res.status(200).send({ token });
     })
     .catch((err) => {
-      if (err.name === 'Error') {
+      if (err.name === 'ValidationError') {
         throw new BadReguest(`Не правильно заполнено поле email: ${email} или password: ${password}`);
       }
-      throw new Unauthorized('Необходимо пройти авторизацию');
+      if (err.status === 401) {
+        throw new Unauthorized('Необходимо пройти авторизацию');
+      }
+      next(err);
     })
     .catch(next);
 };
