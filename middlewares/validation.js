@@ -33,6 +33,7 @@ const validationCreateMovie = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
+    description: Joi.string().required(),
     duration: Joi.number().required(),
     year: Joi.string().required(),
     movieId: Joi.number().required(),
