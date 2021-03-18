@@ -14,12 +14,15 @@ const createMovie = (req, res, next) => {
   const owner = req.user._id;
   Movie.create({ owner, ...req.body })
     .then((movie) => {
-      res.status(200).send(movie);
+      const data = movie;
+      data.owner = undefined;
+      res.status(200).send(data);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadReguest('Одно из полей заполнено не правильно');
       }
+      next(err);
     })
     .catch(next);
 };
