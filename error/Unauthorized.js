@@ -3,7 +3,7 @@ class Unauthorized extends Error {
     super();
 
     this.message = message;
-    this.status = 401;
+    this.statusCode = 401;
   }
 }
 module.exports = Unauthorized;
