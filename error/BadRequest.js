@@ -3,7 +3,7 @@ class BadReguest extends Error {
     super();
 
     this.message = message;
-    this.status = 400;
+    this.statusCode = 400;
   }
 }
 module.exports = BadReguest;
