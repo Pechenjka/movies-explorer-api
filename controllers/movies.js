@@ -29,7 +29,7 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteSavedMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId)
+  Movie.findById(req.params.movieId).select('+owner')
     .then((movie) => {
       if (!movie) {
         throw new NotFound(NOT_FOUND_MESSAGE.MOVIE_ERROR);
