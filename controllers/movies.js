@@ -16,7 +16,7 @@ const createMovie = (req, res, next) => {
   Movie.create({ owner, ...req.body })
     .then((movie) => {
       const data = movie;
-      data.owner = undefined;
+      data.owner = owner;
       res.status(200).send(data);
     })
     .catch((err) => {
