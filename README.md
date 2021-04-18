@@ -1,10 +1,10 @@
-### movies-explorer-api
+# movies-explorer-api
 
 - API для регистрации и авторизации пользователя, поиска и сохранения фильмов.
 
-# Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.icu/
+### Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.icu/
 
-## _Стек технологий_
+### _Стек технологий_
 
 - Node.js/Express.js
-- MongoDb
+- MongoDb/NoSQL
