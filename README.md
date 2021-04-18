@@ -2,7 +2,7 @@
 
 - API для регистрации и авторизации пользователя, поиска и сохранения фильмов.
 
-### Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.icu/
+Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.icu/
 
 ### _Стек технологий_
 
