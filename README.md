@@ -18,4 +18,4 @@
  1. Запуск сервера в режиме production - npm run start
  2. Запуск сервера в режиме разработки - npm run dev
 
- Fron-end часть располагается в этом репозитории https://github.com/Pechenjka/movies-explorer-frontend
+ Front-end часть располагается в этом репозитории https://github.com/Pechenjka/movies-explorer-frontend
