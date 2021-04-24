@@ -1,10 +1,21 @@
-# movies-explorer-api
+# Дипломный проект **movies-explorer-api**  (Яндекс.Практикум)
 
-- API для регистрации и авторизации пользователя, поиска и сохранения фильмов.
+### Сервис поиска фильмов (back-end)
 
-Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.icu/
+- REST API для регистрации и авторизации пользователя, поиска и сохранения фильмов.
 
-### _Стек технологий_
+Адрес домена сервера: https://api.movies.lobachev.students.nomoredomains.rocks
 
-- Node.js/Express.js
-- MongoDb/NoSQL
+### Стек технологий
+
+- Node.js
+- Express.js
+- NoSQL
+- MongoDb
+- Postman
+
+### Запуск сервера на локальной машине
+ 1. Запуск сервера в режиме production - npm run start
+ 2. Запуск сервера в режиме разработки - npm run dev
+
+ Front-end часть располагается в этом репозитории https://github.com/Pechenjka/movies-explorer-frontend
